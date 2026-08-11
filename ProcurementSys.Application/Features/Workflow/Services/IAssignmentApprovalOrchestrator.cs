@@ -10,4 +10,9 @@ public interface IAssignmentApprovalOrchestrator
         int entityId,
         decimal entityValue,
         CancellationToken cancellationToken = default);
+
+    Task<Assignment?> AdvanceApprovalAsync(
+        Assignment completedAssignment,
+        decimal entityValue,
+        CancellationToken cancellationToken = default);
 }

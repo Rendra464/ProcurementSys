@@ -1,17 +1,12 @@
-using MediatR;
-using ProcurementSys.Application.Features.MaterialRequests.Dtos;
-using ProcurementSys.Application.Features.MaterialRequests.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace ProcurementSys.Application.Features.MaterialRequests;
-
-public record GetMaterialRequestDashboardQuery(string? Status) : IRequest<List<MaterialRequestDashboardItemDto>>;
-
-public class GetMaterialRequestDashboardQueryHandler
-    : IRequestHandler<GetMaterialRequestDashboardQuery, List<MaterialRequestDashboardItemDto>>
+namespace ProcurementSys.Application.Features.MaterialRequests
 {
-    private readonly IMaterialRequestService _service;
-    public GetMaterialRequestDashboardQueryHandler(IMaterialRequestService service) => _service = service;
-
-    public Task<List<MaterialRequestDashboardItemDto>> Handle(GetMaterialRequestDashboardQuery request, CancellationToken ct)
-        => _service.GetDashboardAsync(request.Status, ct);
+    internal class GetMaterialRequestDashboardQuery
+    {
+    }
 }

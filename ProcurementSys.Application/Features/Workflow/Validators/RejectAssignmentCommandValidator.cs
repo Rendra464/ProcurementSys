@@ -1,12 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using FluentValidation;
+using ProcurementSys.Application.Features.Workflow;
 
-namespace ProcurementSys.Application.Features.Workflow.Validators
+namespace ProcurementSys.Application.Features.Workflow.Validators;
+
+public class RejectAssignmentCommandValidator : AbstractValidator<RejectAssignmentCommand>
 {
-    internal class RejectAssignmentCommandValidator
+    public RejectAssignmentCommandValidator()
     {
+        RuleFor(x => x.AssignmentId)
+            .GreaterThan(0)
+            .WithMessage("Assignment ID tidak valid.");
+
+        RuleFor(x => x.Notes)
+            .MaximumLength(500)
+            .WithMessage("Catatan tidak boleh melebihi 500 karakter.");
     }
 }

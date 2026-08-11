@@ -34,26 +34,69 @@ public class AssignmentApprovalOrchestrator : IAssignmentApprovalOrchestrator
         decimal entityValue,
         CancellationToken cancellationToken = default)
     {
+        var definition = await GetWorkflowDefinitionAsync(entityType, cancellationToken);
 
+        return await ProcessNextStepAsync(
+            definition,
+            entityType,
+            entityId,
+            currentStepOrder: 0,
+            entityValue,
+            cancellationToken);
+    }
+
+    public async Task<Assignment?> AdvanceApprovalAsync(
+        Assignment completedAssignment,
+        decimal entityValue,
+        CancellationToken cancellationToken = default)
+    {
+        var definition = await GetWorkflowDefinitionAsync(completedAssignment.EntityType, cancellationToken);
+
+        var currentStep = definition.Steps.FirstOrDefault(s => s.Id == completedAssignment.WorkflowStepId);
+        if (currentStep is null)
+        {
+            throw new InvalidOperationException($"WorkflowStep dengan ID '{completedAssignment.WorkflowStepId}' tidak ditemukan di definisi workflow.");
+        }
+
+        return await ProcessNextStepAsync(
+            definition,
+            completedAssignment.EntityType,
+            completedAssignment.EntityId,
+            currentStepOrder: currentStep.StepOrder,
+            entityValue,
+            cancellationToken);
+    }
+
+    private async Task<WorkflowDefinition> GetWorkflowDefinitionAsync(WorkflowProcessType entityType, CancellationToken cancellationToken)
+    {
         var definition = await _workflowDefinitionRepository.GetActiveDefinitionAsync(entityType, cancellationToken);
         if (definition is null)
         {
             throw new WorkflowDefinitionNotFoundException(entityType);
         }
+        return definition;
+    }
 
-        var firstStep = _approvalWorkflowService.GetNextStep(definition, currentStepOrder: 0, entityValue);
-
-        if (firstStep is null)
+    private async Task<Assignment?> ProcessNextStepAsync(
+        WorkflowDefinition definition,
+        WorkflowProcessType entityType,
+        int entityId,
+        int currentStepOrder,
+        decimal entityValue,
+        CancellationToken cancellationToken)
+    {
+        var nextStep = _approvalWorkflowService.GetNextStep(definition, currentStepOrder, entityValue);
+        if (nextStep is null)
         {
-            return null;
+            return null; 
         }
 
-        int? assigneeUserId = await ResolveAssigneeAsync(entityType, entityId, firstStep, cancellationToken);
+        int? assigneeUserId = await ResolveAssigneeAsync(entityType, entityId, nextStep, cancellationToken);
 
         var assignment = Assignment.Create(
             entityType,
             entityId,
-            firstStep.Id,
+            nextStep.Id,
             assigneeUserId);
 
         await _assignmentRepository.AddAsync(assignment, cancellationToken);
@@ -67,7 +110,6 @@ public class AssignmentApprovalOrchestrator : IAssignmentApprovalOrchestrator
         WorkflowStep step,
         CancellationToken cancellationToken)
     {
-
         if (entityType == WorkflowProcessType.ProcurementNonListing && step.RequiredRole == UserRole.ApproverVendor)
         {
             return null;
