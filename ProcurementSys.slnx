@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="ProcurementSys.Application/ProcurementSys.Application.csproj" Id="8e30c866-47be-410e-96c9-73805948ce6d" />
+  <Project Path="ProcurementSys.Contracts/ProcurementSys.Contracts.csproj" Id="80280c17-72b2-4564-996d-1c2dac1d5c9f" />
+  <Project Path="ProcurementSys.Domain/ProcurementSys.Domain.csproj" Id="7655adf8-ffb1-45b7-a4ac-dfcb87d04532" />
+  <Project Path="ProcurementSys.Infrastructure/ProcurementSys.Infrastructure.csproj" Id="ca4231d9-545c-45f3-9475-596e44f1f087" />
+  <Project Path="ProcurementSys.Workers.Notification/ProcurementSys.Workers.Notification.csproj" Id="67f7c699-ce54-49fd-8dea-dbd11dea7b57" />
+  <Project Path="ProcurementSys/ProcurementSys.Api.csproj" />
+</Solution>

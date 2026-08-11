@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>ProcurementSys.Workers.Notification</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.*" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Sengaja HANYA reference Contracts, TIDAK reference Api/Infrastructure -> loosely coupled beneran -->
+    <ProjectReference Include="..\ProcurementSys.Contracts\ProcurementSys.Contracts.csproj" />
+  </ItemGroup>
+</Project>

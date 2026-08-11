@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>ProcurementSys.Domain</RootNamespace>
+  </PropertyGroup>
+  <!-- Domain layer: TIDAK boleh reference project lain. Murni entities, enums, domain events, business rules. -->
+  <ItemGroup>
+    <!-- MediatR.Contracts saja (bukan MediatR penuh) - cuma butuh interface INotification, biar Domain tetap ringan -->
+    <PackageReference Include="MediatR.Contracts" Version="2.*" />
+  </ItemGroup>
+</Project>

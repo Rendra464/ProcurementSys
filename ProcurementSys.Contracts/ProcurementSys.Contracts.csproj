@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>ProcurementSys.Contracts</RootNamespace>
+  </PropertyGroup>
+  <!--
+    Project khusus buat kontrak Integration Event (cross-service via RabbitMQ).
+    Direference oleh ProcurementSys.Infrastructure (publisher) DAN ProcurementSys.Workers.Notification (consumer),
+    tapi API dan Worker TIDAK saling reference satu sama lain - komunikasi cuma lewat event ini. Ini yang bikin
+    "Event-Driven" beneran loosely-coupled, bukan cuma nama folder.
+  -->
+</Project>
