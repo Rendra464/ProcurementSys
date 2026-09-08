@@ -8,9 +8,9 @@ namespace ProcurementSys.Domain.Enums
 {
     public enum ProcurementRequestStatus
     {
-        Draft,
-        InApproval,
-        Approved,
-        Rejected
+        PendingVendorSelection = 1,
+        InApproval = 2,
+        Approved = 3,
+        Rejected = 4
     }
 }

@@ -1,15 +1,36 @@
 using MediatR;
+using ProcurementSys.Application.Abstractions.Persistence;
+using ProcurementSys.Domain.Entities;
 using ProcurementSys.Domain.Events;
 
 namespace ProcurementSys.Application.Features.MaterialRequests.EventHandlers;
 
-// Domain event handler: begitu MaterialRequest fully approved, auto-create ProcurementRequest.
-// Ini "Event-Driven" beneran di dalam satu proses (in-process), bukan cuma nama folder doang.
 public class MaterialRequestFullyApprovedDomainEventHandler : INotificationHandler<MaterialRequestFullyApprovedDomainEvent>
 {
-    public Task Handle(MaterialRequestFullyApprovedDomainEvent notification, CancellationToken ct)
+    private readonly IMaterialRequestRepository _materialRequestRepository;
+    private readonly IProcurementRequestRepository _procurementRequestRepository;
+    private readonly IUnitOfWork _unitOfWork;
+
+    public MaterialRequestFullyApprovedDomainEventHandler(
+        IMaterialRequestRepository materialRequestRepository,
+        IProcurementRequestRepository procurementRequestRepository,
+        IUnitOfWork unitOfWork)
     {
-        // TODO: panggil IProcurementRequestService.CreateFromMaterialRequestAsync(notification.MaterialRequestId, ct)
-        return Task.CompletedTask;
+        _materialRequestRepository = materialRequestRepository;
+        _procurementRequestRepository = procurementRequestRepository;
+        _unitOfWork = unitOfWork;
+    }
+
+    public async Task Handle(MaterialRequestFullyApprovedDomainEvent notification, CancellationToken cancellationToken)
+    {
+        var materialRequest = await _materialRequestRepository.GetByIdAsync(notification.MaterialRequestId, cancellationToken);
+        if (materialRequest is null) return;
+
+        var procurementNumber = $"PR-{DateTime.UtcNow:yyyyMMdd}-{Guid.NewGuid().ToString("N")[..4].ToUpper()}";
+
+        var procurementRequest = ProcurementRequest.CreatePlaceholder(procurementNumber, materialRequest.Id);
+
+        await _procurementRequestRepository.AddAsync(procurementRequest, cancellationToken);
+        await _unitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

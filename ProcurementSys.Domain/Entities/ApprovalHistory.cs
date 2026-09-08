@@ -7,7 +7,8 @@ public class ApprovalHistory
     public int Id { get; private set; }
     public int AssignmentId { get; private set; }
     public ApprovalAction Action { get; private set; }
-    public int ActionByUserId { get; private set; }
+    public int? ActionByUserId { get; private set; }
+    public int? ActionByVendorId { get; private set; }
     public string? Notes { get; private set; }
     public DateTime ActionDate { get; private set; }
     public Assignment? Assignment { get; private set; }

@@ -8,9 +8,10 @@ namespace ProcurementSys.Domain.Enums
 {
     public enum UserRole
     {
-        Requester,
-        ApproverInternal,
-        ApproverVendor,
-        Admin
+        Requester = 1,
+        ApproverInternal = 2,
+        ApproverVendor = 3,
+        Admin = 4,
+        ProcurementOfficer = 5
     }
 }
